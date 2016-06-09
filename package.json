@@ -1,0 +1,13 @@
+{
+  "author": "Andy Pro",
+  "license": "Free",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+
+  },
+  "scripts": {
+    "start": "python -m SimpleHTTPServer"
+  }
+}

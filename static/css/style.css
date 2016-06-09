@@ -1,0 +1,28 @@
+#tile-table {
+  width: 446px;
+  margin: 30px auto 0 auto;
+  border: 1px solid #26a69a;
+  border-radius: 10px;
+  padding: 12px 0 6px 14px;
+}
+
+.tile {
+  width: 100px;
+  height: 100px;
+}
+
+.nest {
+  width: 110px;
+  height: 106px;
+}
+
+.btn.large {
+  padding: 12px 45px;
+}
+
+.congratulations {
+  position: absolute;
+  margin-top: 184px;
+  margin-left: 92px;
+  z-index: 100;
+}
