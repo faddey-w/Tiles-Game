@@ -1,0 +1,22 @@
+<div id="tile-table" class="container">
+    <div class="congratulations" ng-show="$ctrl.game.is_over()">
+        <button class="btn large rounded orange" ng-click="$ctrl.restart()">
+            Congratulations!
+        </button>
+    </div>
+    <div id="tile-{{$index}}" class="quarter nest"
+         ng-repeat="tile in $ctrl.game.tiles">
+      <button class="white rounded tile sample-show-hide delay-500ms"
+              ng-click="$ctrl.game.pick($index)" ng-show="!tile.removed">
+        <i class="fa fa-{{$ctrl.icons[tile.type]}} fa-5x sample-show-hide"
+           aria-hidden="true" ng-show="tile.shown || $ctrl.ignored_hide[$index]">
+        </i>
+      </button>
+    </div>
+</div>
+<div class="center spaced padded">
+    <button class="btn large aquamarin rounded"
+            ng-click="$ctrl.restart()">
+        Restart
+    </button>
+</div>

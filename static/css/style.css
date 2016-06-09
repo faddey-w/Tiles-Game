@@ -31,6 +31,10 @@
   transition: all linear 0.5s;
 }
 
+.delay-500ms {
+  transition-delay: 0.5s;
+}
+
 .sample-show-hide.ng-hide {
   opacity: 0;
 }
