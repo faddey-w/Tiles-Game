@@ -6,9 +6,7 @@
 */
 
 
-angular.module('TilesGame', [
-  //
-])
+angular.module('TilesGame', ['ngAnimate'])
 .component('tilesTable', {
   template: [
     '<div id="tile-table" class="container">',
@@ -23,6 +21,11 @@ angular.module('TilesGame', [
       "binoculars", "car", "firefox", "soccer-ball-o"
     ];
     this.restart = function() {
+      /*var1: 1-dim array(1x16) - all tales with 'quarter' class(25%) and 'float:left'
+        var2: 2-dim array(4x4):
+          tile-table > div {display: block} this is rows
+          tile-table > div > div {display: inline-block} this is cells
+      */
       var rnd =	$filter('randomSequense')(0, 15);
       this.tiles = $filter('randomTiles')(rnd, font);
       this.formerTile = undefined;
@@ -43,47 +46,55 @@ angular.module('TilesGame', [
         return tile.attributes['data-icon-id'].value;
       }
 
-      function dfrAction(data) {
+      function dfrAction(data) { // some deferred actions
         // here we can apply animations
         $timeout(function() {
           switch(data.action) {
             case 'close':
-              data.tile1.image = '';
-              data.tile2.image = '';
+              data.tile1.tile.show = false;
+              data.tile2.tile.show = false;
               break;
             case 'disappear':
-              data.tile1.innerHTML = '';
-              data.tile2.innerHTML = '';
+              data.tile1.tile.show = false;
+              data.tile2.tile.show = false;
+              dfrAction({
+                tile1: data.tile1,
+                tile2: data.tile2,
+                action: 'empty',
+                timeout: 500
+              });
               break;
-            //case
+            case 'empty':
+              data.tile1.el.innerHTML = '';
+              data.tile2.el.innerHTML = '';
+              break;
           }
         }, data.timeout);
       }
 
       scope.click = function() {
 
-        var ctrl = scope.$parent.$ctrl; // shortcut to controller scope
-        if(!scope.tile.image) scope.tile.image = scope.tile.class; //open the tile, 'if' - for test
-        var thisTile = element[0]; // get root div of the current tile
+        var ctrl = scope.$parent.$ctrl, // shortcut to controller scope
+            thisTile = {
+              el: element[0], // get root div of the current tile
+              tile: scope.tile
+            };
+
+        thisTile.tile.show = true;
 
         if(ctrl.formerTile === undefined) { // is a first click for pair?
-          ctrl.formerTile = {
-            el: thisTile,
-            tile: scope.tile
-          }
-        }
-        else { // this is a second click for pair
-
-          if(ctrl.formerTile.el === thisTile) {
+          ctrl.formerTile = thisTile;
+        } else { // this is a second click for pair
+          if(ctrl.formerTile.el === thisTile.el) {
             // need to close the tile, it is the same!
-            scope.tile.image = '';
+            thisTile.tile.show = false;
           } else {
             // different tiles
-            if(getId(ctrl.formerTile.el) === getId(thisTile)) {
+            if(getId(ctrl.formerTile.el) === getId(thisTile.el)) {
               // the contents of the tiles is same, both should disappear
               dfrAction({
                 tile1: thisTile,
-                tile2: ctrl.formerTile.el,
+                tile2: ctrl.formerTile,
                 action: 'disappear',
                 timeout: 1000
               });
@@ -92,8 +103,8 @@ angular.module('TilesGame', [
             } else{
               // different contents, both should close
               dfrAction({
-                tile1: scope.tile,
-                tile2: ctrl.formerTile.tile,
+                tile1: thisTile,
+                tile2: ctrl.formerTile,
                 action: 'close',
                 timeout: 1000
               });
@@ -103,10 +114,6 @@ angular.module('TilesGame', [
           ctrl.formerTile = undefined;
         }
       };
-      // prepare font awesome classes
-      scope.tile.class = "fa fa-" + scope.tile.icon + " fa-5x";
-      scope.tile.image = "";
-      //scope.tile.image = scope.tile.class; // uncomment this for God-mode
     }
   };
 }])
@@ -153,7 +160,8 @@ angular.module('TilesGame', [
       if(id > 7) id -= 8;
       tiles.push({
         id: id,
-        icon: font[id]
+        icon: font[id],
+        show: false // change this to 'true' for God-mode
       });
     });
     return tiles;

@@ -2,7 +2,7 @@
 
 using Angular.js framework
 
-## quick start
+## Start application
 
 - `npm start` if you have Python installed
 

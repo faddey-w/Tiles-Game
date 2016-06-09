@@ -26,3 +26,11 @@
   margin-left: 92px;
   z-index: 100;
 }
+
+.sample-show-hide {
+  transition: all linear 0.5s;
+}
+
+.sample-show-hide.ng-hide {
+  opacity: 0;
+}
